@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Large parts of this file are copied from https://github.com/facebook/react/blob/main/packages/eslint-plugin-react-hooks/src/rules/ExhaustiveDeps.ts
 
 /**
