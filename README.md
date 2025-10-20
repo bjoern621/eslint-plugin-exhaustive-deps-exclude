@@ -4,7 +4,7 @@
 
 React's `useEffect` has a simple mental model: <ins>the code inside executes whenever one of the dependencies changes</ins>. The dependency array is supposed to give developers control over _when_ effects run.
 
-React's ESLint rule `react-hooks/exhaustive-deps` however enforces that you include every value used inside the effect in the dependency array. But here's the catch: if you're forced to include _every_ dependency, why does the dependency array even exist? React could just auto-track everything. The existence of the dependency array implies that **developers should have control** over what triggers re-execution.
+React's ESLint rule `react-hooks/exhaustive-deps` however enforces that you include every value used inside the effect in the dependency array. But here's the catch: if you're forced to include _every_ dependency, why does the dependency array even exist? React could just auto-track everything. **Developers should have control** over what triggers re-execution.
 
 In reality, there are legitimate cases where you _know_ a dependency shouldn't trigger a re-run. You understand your code better than the linter does.
 
