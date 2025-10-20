@@ -28,7 +28,7 @@ function ChatRoom({ roomId }) {
             }
         });
         return () => connection.disconnect();
-    }, [roomId, isMuted]); // You are forced to include both roomId and isMuted
+    }, [roomId, isMuted]); // eslint forces you to include both roomId and isMuted
 }
 ```
 
