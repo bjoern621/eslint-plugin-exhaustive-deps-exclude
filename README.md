@@ -213,4 +213,25 @@ The plugin will:
 
 ## (Bonus) Why not use // eslint-ignore-next-line react-hooks/exhaustive-deps ?
 
-In the past
+Because completely disabling the rule means you get **zero** linting help. You could accidentally forget to include a dependency that _should_ be there, and ESLint won't catch it.
+
+**With `eslint-disable-next-line`:**
+
+```javascript
+// eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+    doSomething(a, b, c);
+}, [a]); // Missing b and c - no warning!
+```
+
+**With `exhaustive-deps-exclude`:**
+
+```javascript
+useEffect(() => {
+    doSomething(a, b, c);
+
+    // exhaustive-deps-exclude [c]
+}, [a]); // ⚠️ Plugin warns: "b is used but not in deps or excluded"
+```
+
+This plugin gives you **selective exclusion** while still catching genuine mistakes. You explicitly declare which dependencies you're intentionally excluding, and the plugin verifies everything else is correct.
