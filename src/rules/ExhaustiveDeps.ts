@@ -25,6 +25,11 @@ import type {
 } from 'estree';
 
 import { getAdditionalEffectHooksFromSettings } from '../shared/Utils';
+import { 
+  parseExcludedDependencies,
+  filterMissingDependencies,
+  filterSuggestedDependencies 
+} from './ExcludeHelper';
 
 type DeclaredDependency = {
   key: string;
@@ -715,6 +720,7 @@ const rule = {
             stableDependencies,
             externalDependencies: new Set<string>(),
             isEffect: true,
+            excludedDeps: new Set(),
           });
           reportProblem({
             node: reactiveHook,
@@ -887,6 +893,10 @@ const rule = {
         );
       }
 
+      const excludedDeps = declaredDependenciesNode 
+        ? parseExcludedDependencies(declaredDependenciesNode, context)
+        : new Set<string>();
+
       const {
         suggestedDependencies,
         unnecessaryDependencies,
@@ -898,6 +908,7 @@ const rule = {
         stableDependencies,
         externalDependencies,
         isEffect,
+        excludedDeps,
       });
 
       let suggestedDeps = suggestedDependencies;
@@ -998,6 +1009,7 @@ const rule = {
           stableDependencies,
           externalDependencies,
           isEffect,
+          excludedDeps: new Set(),
         }).suggestedDependencies;
       }
 
@@ -1538,12 +1550,14 @@ function collectRecommendations({
   stableDependencies,
   externalDependencies,
   isEffect,
+  excludedDeps = new Set(),
 }: {
   dependencies: Map<string, Dependency>;
   declaredDependencies: Array<DeclaredDependency>;
   stableDependencies: Set<string>;
   externalDependencies: Set<string>;
   isEffect: boolean;
+  excludedDeps?: Set<string>;
 }) {
   // Our primary data structure.
   // It is a logical representation of property chains:
@@ -1698,14 +1712,19 @@ function collectRecommendations({
 
   // Then add the missing ones at the end.
   missingDependencies.forEach(key => {
-    suggestedDependencies.push(key);
+    if (!excludedDeps.has(key)) {
+      suggestedDependencies.push(key);
+    }
   });
+
+  // Filter out excluded dependencies from missing dependencies
+  const filteredMissingDependencies = filterMissingDependencies(missingDependencies, excludedDeps);
 
   return {
     suggestedDependencies,
     unnecessaryDependencies,
     duplicateDependencies,
-    missingDependencies,
+    missingDependencies: filteredMissingDependencies,
   };
 }
 
