@@ -2,7 +2,7 @@
 
 ## The Problem
 
-React's `useEffect` has a simple mental model: **the code inside executes whenever one of the dependencies changes**. The dependency array is supposed to give developers control over *when* effects run.
+React's `useEffect` has a simple mental model: <ins>the code inside executes whenever one of the dependencies changes</ins>. The dependency array is supposed to give developers control over *when* effects run.
 
 But here's the catch: if the linting rule forces you to include *every* dependency, why does the dependency array even exist? React could just auto-track everything. The existence of the dependency array implies that **developers should have control** over what triggers re-execution.
 
