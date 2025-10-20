@@ -2,11 +2,11 @@
 
 ## The Problem
 
-React's `useEffect` has a simple mental model: <ins>the code inside executes whenever one of the dependencies changes</ins>. The dependency array is supposed to give developers control over *when* effects run.
+React's `useEffect` has a simple mental model: <ins>the code inside executes whenever one of the dependencies changes</ins>. The dependency array is supposed to give developers control over _when_ effects run.
 
-But here's the catch: if the linting rule forces you to include *every* dependency, why does the dependency array even exist? React could just auto-track everything. The existence of the dependency array implies that **developers should have control** over what triggers re-execution.
+React's ESLint rule `react-hooks/exhaustive-deps` enforces that you include every value used inside the effect in the dependency array. But here's the catch: if you're forced to include _every_ dependency, why does the dependency array even exist? React could just auto-track everything. The existence of the dependency array implies that **developers should have control** over what triggers re-execution.
 
-In reality, there are legitimate cases where you *know* a dependency shouldn't trigger a re-run. You understand your code better than the linter does.
+In reality, there are legitimate cases where you _know_ a dependency shouldn't trigger a re-run. You understand your code better than the linter does.
 
 ## React's "Solution" is Overcomplicated
 
@@ -15,21 +15,20 @@ Consider this chat room example where you want to play a sound on new messages, 
 
 ```javascript
 function ChatRoom({ roomId }) {
-  const [messages, setMessages] = useState([]);
-  const [isMuted, setIsMuted] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [isMuted, setIsMuted] = useState(false);
 
-  useEffect(() => {
-    const connection = createConnection();
-    connection.connect();
-    connection.on('message', (receivedMessage) => {
-      setMessages(msgs => [...msgs, receivedMessage]);
-      if (!isMuted) {
-        playSound();
-      }
-    });
-    return () => connection.disconnect();
-
-  }, [roomId, isMuted]); // You are forced to include both roomId and isMuted
+    useEffect(() => {
+        const connection = createConnection();
+        connection.connect();
+        connection.on("message", (receivedMessage) => {
+            setMessages((msgs) => [...msgs, receivedMessage]);
+            if (!isMuted) {
+                playSound();
+            }
+        });
+        return () => connection.disconnect();
+    }, [roomId, isMuted]); // You are forced to include both roomId and isMuted
 }
 ```
 
@@ -38,28 +37,27 @@ The bug: when you toggle `isMuted`, the connection **disconnects and reconnects 
 React introduced `useEffectEvent` as their answer to this problem:
 
 ```javascript
-import { useState, useEffect, useEffectEvent } from 'react';
+import { useState, useEffect, useEffectEvent } from "react";
 
 function ChatRoom({ roomId }) {
-  const [messages, setMessages] = useState([]);
-  const [isMuted, setIsMuted] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [isMuted, setIsMuted] = useState(false);
 
-  const onMessage = useEffectEvent(receivedMessage => {
-    setMessages(msgs => [...msgs, receivedMessage]);
-    if (!isMuted) {
-      playSound();
-    }
-  });
-
-  useEffect(() => {
-    const connection = createConnection();
-    connection.connect();
-    connection.on('message', (receivedMessage) => {
-      onMessage(receivedMessage);
+    const onMessage = useEffectEvent((receivedMessage) => {
+        setMessages((msgs) => [...msgs, receivedMessage]);
+        if (!isMuted) {
+            playSound();
+        }
     });
-    return () => connection.disconnect();
 
-  }, [roomId]);
+    useEffect(() => {
+        const connection = createConnection();
+        connection.connect();
+        connection.on("message", (receivedMessage) => {
+            onMessage(receivedMessage);
+        });
+        return () => connection.disconnect();
+    }, [roomId]);
 }
 ```
 
@@ -69,22 +67,22 @@ With this plugin, you just add one comment explaining your intent:
 
 ```javascript
 function ChatRoom({ roomId }) {
-  const [messages, setMessages] = useState([]);
-  const [isMuted, setIsMuted] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [isMuted, setIsMuted] = useState(false);
 
-  useEffect(() => {
-    const connection = createConnection();
-    connection.connect();
-    connection.on('message', (receivedMessage) => {
-      setMessages(msgs => [...msgs, receivedMessage]);
-      if (!isMuted) {
-        playSound();
-      }
-    });
-    return () => connection.disconnect();
-    
-    // exhaustive-deps-exclude [isMuted]
-  }, [roomId]);
+    useEffect(() => {
+        const connection = createConnection();
+        connection.connect();
+        connection.on("message", (receivedMessage) => {
+            setMessages((msgs) => [...msgs, receivedMessage]);
+            if (!isMuted) {
+                playSound();
+            }
+        });
+        return () => connection.disconnect();
+
+        // exhaustive-deps-exclude [isMuted]
+    }, [roomId]);
 }
 ```
 
@@ -96,28 +94,28 @@ That's it! 🥳 Clean, explicit, and you keep your code structure intact.
 
 ```javascript
 useEffect(() => {
-  websocket.on('message', (data) => {
-    handleMessage(data, currentUser);
-  });
+    websocket.on("message", (data) => {
+        handleMessage(data, currentUser);
+    });
 
-  // exhaustive-deps-exclude [websocket, currentUser]
+    // exhaustive-deps-exclude [websocket, currentUser]
 }, []);
 ```
 
-You want to set up the listener *once*. Re-creating it when `currentUser` changes would cause duplicate listeners or connection issues.
+You want to set up the listener _once_. Re-creating it when `currentUser` changes would cause duplicate listeners or connection issues.
 
 ### 2. Stable Callback References
 
 ```javascript
 function DataTable({ onRowClick, filters }) {
-  useEffect(() => {
-    const data = fetchData(filters);
-    data.forEach(row => {
-      row.onClick = () => onRowClick(row);
-    });
-    
-    // exhaustive-deps-exclude [onRowClick]
-  }, [filters]);
+    useEffect(() => {
+        const data = fetchData(filters);
+        data.forEach((row) => {
+            row.onClick = () => onRowClick(row);
+        });
+
+        // exhaustive-deps-exclude [onRowClick]
+    }, [filters]);
 }
 ```
 
@@ -127,12 +125,12 @@ function DataTable({ onRowClick, filters }) {
 
 ```javascript
 useEffect(() => {
-  const element = elementRef.current;
-  element.addEventListener('scroll', handleScroll);
-  
-  return () => element.removeEventListener('scroll', handleScroll);
-  
-  // exhaustive-deps-exclude [elementRef]
+    const element = elementRef.current;
+    element.addEventListener("scroll", handleScroll);
+
+    return () => element.removeEventListener("scroll", handleScroll);
+
+    // exhaustive-deps-exclude [elementRef]
 }, [handleScroll]);
 ```
 
@@ -144,13 +142,13 @@ Refs don't cause re-renders, so including them in deps is pointless.
 const [count, setCount] = useState(0);
 
 useEffect(() => {
-  const interval = setInterval(() => {
-    setCount(c => c + 1);
-  }, 1000);
-  
-  return () => clearInterval(interval);
-  
-  // exhaustive-deps-exclude [setCount]
+    const interval = setInterval(() => {
+        setCount((c) => c + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+
+    // exhaustive-deps-exclude [setCount]
 }, []);
 ```
 
@@ -160,17 +158,17 @@ useEffect(() => {
 
 ```javascript
 function SearchBox({ onSearch, debounceMs }) {
-  const [query, setQuery] = useState('');
+    const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      onSearch(query);
-    }, debounceMs);
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            onSearch(query);
+        }, debounceMs);
 
-    return () => clearTimeout(handler);
-    
-    // exhaustive-deps-exclude [onSearch]
-  }, [query, debounceMs]);
+        return () => clearTimeout(handler);
+
+        // exhaustive-deps-exclude [onSearch]
+    }, [query, debounceMs]);
 }
 ```
 
@@ -188,11 +186,11 @@ Add to your `.eslintrc`:
 
 ```json
 {
-  "plugins": ["exhaustive-deps-exclude"],
-  "rules": {
-    "react-hooks/exhaustive-deps": "off",
-    "exhaustive-deps-exclude/exhaustive-deps": "warn"
-  }
+    "plugins": ["exhaustive-deps-exclude"],
+    "rules": {
+        "react-hooks/exhaustive-deps": "off",
+        "exhaustive-deps-exclude/exhaustive-deps": "warn"
+    }
 }
 ```
 
@@ -202,17 +200,17 @@ Add an inline comment before the closing bracket of your dependency array:
 
 ```javascript
 useEffect(() => {
-  // your effect code
-  
-  // exhaustive-deps-exclude [dep1, dep2, dep3]
+    // your effect code
+    // exhaustive-deps-exclude [dep1, dep2, dep3]
 }, [includedDep]);
 ```
 
 The plugin will:
-- ✅ Check that all non-excluded dependencies are in the array
-- ✅ Ignore dependencies listed in the exclude comment
-- ✅ Warn about unnecessary exclusions (if you exclude something not used in the effect)
-  
+
+-   ✅ Check that all non-excluded dependencies are in the array
+-   ✅ Ignore dependencies listed in the exclude comment
+-   ✅ Warn about unnecessary exclusions (if you exclude something not used in the effect)
+
 ## (Bonus) Why not use // eslint-ignore-next-line react-hooks/exhaustive-deps ?
 
 In the past
