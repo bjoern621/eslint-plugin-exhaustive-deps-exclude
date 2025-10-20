@@ -233,4 +233,4 @@ useEffect(() => {
 }, [a]); // ⚠️ Plugin warns: "b is used but not in deps or excluded"
 ```
 
-This plugin gives you **selective exclusion** while still catching genuine mistakes. You explicitly declare which dependencies you're intentionally excluding, and the plugin verifies everything else is correct.
+This plugin gives you **selective exclusion** while still catching genuine mistakes. You explicitly declare which dependencies you're intentionally excluding and the plugin verifies everything else is correct.
