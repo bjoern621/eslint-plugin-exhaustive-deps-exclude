@@ -211,7 +211,7 @@ The plugin will:
 -   ✅ Ignore dependencies listed in the exclude comment
 -   ✅ Warn about unnecessary exclusions (if you exclude something not used in the effect)
 
-## (Bonus) Why not use // eslint-ignore-next-line react-hooks/exhaustive-deps ?
+## (Bonus) Why not use '// eslint-ignore-next-line react-hooks/exhaustive-deps'?
 
 Because completely disabling the rule means you get **zero** linting help. You could accidentally forget to include a dependency that _should_ be there, and ESLint won't catch it.
 
