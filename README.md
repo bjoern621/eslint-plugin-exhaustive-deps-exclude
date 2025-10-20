@@ -11,7 +11,7 @@ In reality, there are legitimate cases where you *know* a dependency shouldn't t
 ## React's "Solution" is Overcomplicated
 
 Consider this chat room example where you want to play a sound on new messages, but only if not muted:<br/>
-(Example taken from [Removing Effect Dependencies](https://react.dev/learn/removing-effect-dependencies#do-you-want-to-read-a-value-without-reacting-to-its-changes).)
+(Example taken from [Removing Effect Dependencies](https://react.dev/learn/removing-effect-dependencies#do-you-want-to-read-a-value-without-reacting-to-its-changes))
 
 ```javascript
 function ChatRoom({ roomId }) {
