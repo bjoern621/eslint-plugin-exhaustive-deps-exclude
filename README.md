@@ -210,6 +210,7 @@ The plugin will:
 -   ✅ Check that all non-excluded dependencies are in the array
 -   ✅ Ignore dependencies listed in the exclude comment
 -   ✅ Warn about unnecessary exclusions (if you exclude something not used in the effect)
+-   ✅ Detect conflicting inclusions/exclusions
 
 ## (Bonus) Why not use '// eslint-ignore-next-line react-hooks/exhaustive-deps'?
 
