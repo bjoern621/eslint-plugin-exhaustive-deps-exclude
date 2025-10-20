@@ -219,9 +219,9 @@ Because completely disabling the rule means you get **zero** linting help. You c
 **With `eslint-disable-next-line`:**
 
 ```javascript
-// eslint-disable-next-line react-hooks/exhaustive-deps
 useEffect(() => {
     doSomething(a, b, c);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [a]); // Missing b and c - no warning!
 ```
 
@@ -230,9 +230,8 @@ useEffect(() => {
 ```javascript
 useEffect(() => {
     doSomething(a, b, c);
-
     // exhaustive-deps-exclude [c]
 }, [a]); // ⚠️ Plugin warns: "b is used but not in deps or excluded"
 ```
 
-This plugin gives you **selective exclusion** while still catching genuine mistakes. You explicitly declare which dependencies you're intentionally excluding, and the plugin verifies everything else is correct.
+This plugin gives you **selective exclusion** while still catching genuine mistakes. You explicitly declare which dependencies you're intentionally excluding and the plugin verifies everything else is correct.
