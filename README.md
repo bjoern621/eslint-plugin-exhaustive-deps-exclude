@@ -28,7 +28,7 @@ function ChatRoom({ roomId }) {
             }
         });
         return () => connection.disconnect();
-    }, [roomId, isMuted]); // eslint forces you to include both roomId and isMuted
+    }, [roomId, isMuted]); // eslint forces you to include isMuted in the dependency array
 }
 ```
 
