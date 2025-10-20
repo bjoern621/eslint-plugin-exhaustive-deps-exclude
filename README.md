@@ -220,7 +220,7 @@ Because completely disabling the rule means you get **zero** linting help. You c
 ```javascript
 useEffect(() => {
     doSomething(a, b, c);
-    // eslint-disable-next-line custom/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [a]); // Missing b and c - no warning!
 ```
 
