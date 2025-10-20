@@ -23,6 +23,7 @@
     "author": "Björn Blessin (https://github.com/bjoern621)",
     "type": "module",
     "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "scripts": {
         "test": "npm run build && jest",
         "build": "tsc"
@@ -34,5 +35,11 @@
     },
     "files": [
         "lib"
-    ]
+    ],
+    "peerDependencies": {
+        "eslint": "^9.0.0"
+    },
+    "engines": {
+        "node": ">=18"
+    }
 }
