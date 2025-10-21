@@ -1,4 +1,4 @@
-import ExhaustiveDeps from "./rules/ExhaustiveDeps";
+import ExhaustiveDeps from "./rules/ExhaustiveDeps.js";
 
 const plugin = {
     rules: {

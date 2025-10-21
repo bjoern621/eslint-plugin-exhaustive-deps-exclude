@@ -7,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Rule } from 'eslint';
+import type { Rule } from 'eslint';
 
 const SETTINGS_KEY = 'react-hooks';
 const SETTINGS_ADDITIONAL_EFFECT_HOOKS_KEY = 'additionalEffectHooks';

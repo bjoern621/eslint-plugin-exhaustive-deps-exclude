@@ -24,11 +24,11 @@ import type {
   VariableDeclarator,
 } from 'estree';
 
-import { getAdditionalEffectHooksFromSettings } from '../shared/Utils';
+import { getAdditionalEffectHooksFromSettings } from '../shared/Utils.js';
 import { 
   parseExcludedDependencies,
   filterMissingDependencies
-} from './ExcludeHelper';
+} from './ExcludeHelper.js';
 
 type DeclaredDependency = {
   key: string;
