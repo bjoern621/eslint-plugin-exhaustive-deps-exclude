@@ -27,8 +27,7 @@ import type {
 import { getAdditionalEffectHooksFromSettings } from '../shared/Utils';
 import { 
   parseExcludedDependencies,
-  filterMissingDependencies,
-  filterSuggestedDependencies 
+  filterMissingDependencies
 } from './ExcludeHelper';
 
 type DeclaredDependency = {
