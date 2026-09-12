@@ -1,6 +1,3 @@
-// @ts-nocheck
-// Large parts of this file are copied from https://github.com/facebook/react/blob/main/packages/eslint-plugin-react-hooks/src/rules/ExhaustiveDeps.ts
-
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -24,11 +21,7 @@ import type {
   VariableDeclarator,
 } from 'estree';
 
-import { getAdditionalEffectHooksFromSettings } from '../shared/Utils.js';
-import {
-  parseExcludedDependencies,
-  filterMissingDependencies
-} from './ExcludeHelper.js';
+import {getAdditionalEffectHooksFromSettings} from '../shared/Utils';
 
 type DeclaredDependency = {
   key: string;
@@ -86,7 +79,6 @@ const rule = {
   create(context: Rule.RuleContext) {
     const rawOptions = context.options && context.options[0];
     const settings = context.settings || {};
-
 
     // Parse the `additionalHooks` regex.
     // Use rule-level additionalHooks if provided, otherwise fall back to settings
@@ -723,7 +715,6 @@ const rule = {
             stableDependencies,
             externalDependencies: new Set<string>(),
             isEffect: true,
-            excludedDeps: new Set(),
           });
           reportProblem({
             node: reactiveHook,
@@ -896,10 +887,6 @@ const rule = {
         );
       }
 
-      const excludedDeps = declaredDependenciesNode 
-        ? parseExcludedDependencies(declaredDependenciesNode, context)
-        : new Set<string>();
-
       const {
         suggestedDependencies,
         unnecessaryDependencies,
@@ -911,7 +898,6 @@ const rule = {
         stableDependencies,
         externalDependencies,
         isEffect,
-        excludedDeps,
       });
 
       let suggestedDeps = suggestedDependencies;
@@ -1012,7 +998,6 @@ const rule = {
           stableDependencies,
           externalDependencies,
           isEffect,
-          excludedDeps: new Set(),
         }).suggestedDependencies;
       }
 
@@ -1553,14 +1538,12 @@ function collectRecommendations({
   stableDependencies,
   externalDependencies,
   isEffect,
-  excludedDeps = new Set(),
 }: {
   dependencies: Map<string, Dependency>;
   declaredDependencies: Array<DeclaredDependency>;
   stableDependencies: Set<string>;
   externalDependencies: Set<string>;
   isEffect: boolean;
-  excludedDeps?: Set<string>;
 }) {
   // Our primary data structure.
   // It is a logical representation of property chains:
@@ -1715,19 +1698,14 @@ function collectRecommendations({
 
   // Then add the missing ones at the end.
   missingDependencies.forEach(key => {
-    if (!excludedDeps.has(key)) {
-      suggestedDependencies.push(key);
-    }
+    suggestedDependencies.push(key);
   });
-
-  // Filter out excluded dependencies from missing dependencies
-  const filteredMissingDependencies = filterMissingDependencies(missingDependencies, excludedDeps);
 
   return {
     suggestedDependencies,
     unnecessaryDependencies,
     duplicateDependencies,
-    missingDependencies: filteredMissingDependencies,
+    missingDependencies,
   };
 }
 

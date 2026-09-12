@@ -20,13 +20,16 @@
         "url": "git+https://github.com/bjoern621/eslint-plugin-exhaustive-deps-exclude.git"
     },
     "license": "MIT",
-    "author": "Björn Blessin (https://github.com/bjoern621)",
+    "author": "Bj\u00f6rn Blessin (https://github.com/bjoern621)",
     "type": "module",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
         "test": "npm run build && jest",
-        "build": "tsc"
+        "build": "tsc",
+        "patch": "./scripts/show-patch.sh",
+        "sync": "./scripts/sync-upstream.sh",
+        "sync:check": "./scripts/sync-upstream.sh --check"
     },
     "devDependencies": {
         "@types/eslint": "^9.6.1",
