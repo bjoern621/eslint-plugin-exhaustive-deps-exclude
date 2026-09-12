@@ -3,11 +3,12 @@ name: Release
 # The registry credential is minted per run through npm trusted publishing,
 # configured on the package's npmjs.com settings against this repository and this file name.
 on:
-  release:
-    types: [published]
+  push:
+    tags: ["v*"]
 
 permissions:
-  contents: read
+  # Creating the GitHub release.
+  contents: write
   # Trusted publishing exchanges this token for the credential.
   id-token: write
 
@@ -34,12 +35,22 @@ jobs:
 
       - name: Refuse a tag that disagrees with package.json
         run: |
-          tag=${GITHUB_REF_NAME#v}
-          pkg=$(node -p "require('./package.json').version")
-          if [ "$tag" != "$pkg" ]; then
-            echo "release tag $tag, package.json $pkg" >&2
+          version=${GITHUB_REF_NAME#v}
+          declared=$(node -p "require('./package.json').version")
+          if [ "$version" != "$declared" ]; then
+            echo "tag $version, package.json $declared" >&2
             exit 1
           fi
+          echo "version=$version" >> "$GITHUB_ENV"
+
+      # Ahead of the publish, so a version the changelog skipped is caught while nothing is released.
+      - name: Take the release body from the changelog
+        run: ./scripts/changelog-section.sh "$version" > notes.md
 
       # prepack builds lib/, which the tree does not carry.
       - run: npm publish
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --notes-file notes.md

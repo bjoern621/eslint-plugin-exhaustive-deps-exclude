@@ -91,6 +91,9 @@ done
 
 printf '%s\n' "$fetched_ref" > vendor/UPSTREAM_REF
 
+# The README names the pin, and CI refuses the two disagreeing.
+"$repo_root/scripts/upstream-banner.sh" || echo "README banner not updated" >&2
+
 if [ "$conflicts" -gt 0 ]; then
     echo "$conflicts conflict(s) left as markers in src/" >&2
     exit 1

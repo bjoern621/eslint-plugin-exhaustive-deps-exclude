@@ -2,6 +2,11 @@
 
 [![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude)
 
+<!-- upstream:start -->
+> **Based on** [`eslint-plugin-react-hooks@7.1.1-canary-019019be-20260911`](https://www.npmjs.com/package/eslint-plugin-react-hooks/v/7.1.1-canary-019019be-20260911)
+> from React commit [`019019be403c3269e15b8d7ebefb57d30f84086b`](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b).
+<!-- upstream:end -->
+
 ## The Problem
 
 React's `useEffect` has a simple mental model: <ins>the code inside executes whenever one of the dependencies changes</ins>. The dependency array is supposed to give developers control over _when_ effects run.

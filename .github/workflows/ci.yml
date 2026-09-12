@@ -36,3 +36,6 @@ jobs:
             echo "merge markers left in the tree" >&2
             exit 1
           fi
+
+      - name: Refuse a README banner that disagrees with the pin
+        run: ./scripts/upstream-banner.sh --check
