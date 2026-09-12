@@ -238,5 +238,5 @@ This plugin gives you **selective exclusion** while still catching genuine mista
 
 ## Docs
 
--   [Known issues](docs/known-issues.md): open defects, and the boundaries of what an exclusion reaches.
+-   [What an exclusion reaches](docs/exclusion-scope.md): where the comment is read from, and which name matches which dependency.
 -   [Keeping the vendored rule current](docs/upstream-sync.md): how the vendored React rule tracks upstream, and what to do when a merge conflicts.
