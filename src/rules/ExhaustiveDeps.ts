@@ -27,7 +27,8 @@ import type {
 import { getAdditionalEffectHooksFromSettings } from '../shared/Utils.js';
 import {
   parseExcludedDependencies,
-  filterMissingDependencies
+  filterMissingDependencies,
+  findStaleExclusions
 } from './ExcludeHelper.js';
 
 type DeclaredDependency = {
@@ -86,7 +87,6 @@ const rule = {
   create(context: Rule.RuleContext) {
     const rawOptions = context.options && context.options[0];
     const settings = context.settings || {};
-
 
     // Parse the `additionalHooks` regex.
     // Use rule-level additionalHooks if provided, otherwise fall back to settings
@@ -896,9 +896,42 @@ const rule = {
         );
       }
 
-      const excludedDeps = declaredDependenciesNode 
-        ? parseExcludedDependencies(declaredDependenciesNode, context)
+      const excludedDeps = declaredDependenciesNode
+        ? parseExcludedDependencies(declaredDependenciesNode, node, context)
         : new Set<string>();
+
+      if (declaredDependenciesNode && excludedDeps.size > 0) {
+        const stale = findStaleExclusions(
+          excludedDeps,
+          dependencies.keys(),
+          declaredDependencies.map(dep => dep.key),
+        );
+        const quote = (deps: Array<string>) =>
+          joinEnglish(
+            deps.sort().map(name => "'" + formatDependency(name) + "'"),
+          );
+
+        if (stale.declared.length > 0) {
+          reportProblem({
+            node: declaredDependenciesNode,
+            message:
+              `React Hook ${reactiveHookName} excludes ${quote(stale.declared)}, ` +
+              `which the dependency array also lists. Remove ` +
+              `${stale.declared.length > 1 ? 'them' : 'it'} from the array or ` +
+              `from the exhaustive-deps-exclude comment.`,
+          });
+        }
+        if (stale.unused.length > 0) {
+          reportProblem({
+            node: declaredDependenciesNode,
+            message:
+              `React Hook ${reactiveHookName} excludes ${quote(stale.unused)}, ` +
+              `which it does not use. Remove ` +
+              `${stale.unused.length > 1 ? 'them' : 'it'} from the ` +
+              `exhaustive-deps-exclude comment.`,
+          });
+        }
+      }
 
       const {
         suggestedDependencies,
@@ -1012,7 +1045,7 @@ const rule = {
           stableDependencies,
           externalDependencies,
           isEffect,
-          excludedDeps: new Set(),
+          excludedDeps,
         }).suggestedDependencies;
       }
 

@@ -235,3 +235,8 @@ useEffect(() => {
 ```
 
 This plugin gives you **selective exclusion** while still catching genuine mistakes. You explicitly declare which dependencies you're intentionally excluding and the plugin verifies everything else is correct.
+
+## Docs
+
+-   [Known issues](docs/known-issues.md): open defects, and the boundaries of what an exclusion reaches.
+-   [Keeping the vendored rule current](docs/upstream-sync.md): how the vendored React rule tracks upstream, and what to do when a merge conflicts.
