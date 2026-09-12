@@ -25,7 +25,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "test": "npm run build && node --test \"tests/*.test.js\"",
+        "test": "npm run build && node --test tests/*.test.js",
         "build": "tsc",
         "patch": "./scripts/show-patch.sh",
         "sync": "./scripts/sync-upstream.sh",
