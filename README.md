@@ -46,7 +46,7 @@ function ChatRoom({ roomId }) {
     const onMessage = useEffectEvent((receivedMessage) => { // ╭─────────────────────────────────╮
         setMessages((msgs) => [...msgs, receivedMessage]);  // │ Whole new function with a whole │
         if (!isMuted) {                                     // │ new hook just to exclude one    │
-            playSound();                                    // │ dependency                      │
+            playSound();                                    // │ dependency...                   │
         }                                                   // ╰─────────────────────────────────╯
     });
 
