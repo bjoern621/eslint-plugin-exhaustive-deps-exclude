@@ -29,6 +29,11 @@ jobs:
           node-version: 24
           cache: npm
 
+      - uses: go-task/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - run: npm ci
 
       - name: Merge upstream over the pinned revision
@@ -51,7 +56,7 @@ jobs:
         id: verify
         if: steps.sync.outputs.changed == 'true'
         continue-on-error: true
-        run: npm test 2>&1 | tee test.log
+        run: task test 2>&1 | tee test.log
 
       - name: Open or update the sync pull request
         if: steps.sync.outputs.changed == 'true'
@@ -77,7 +82,7 @@ jobs:
             echo "## Local delta after the merge"
             echo
             echo '```'
-            ./scripts/show-patch.sh --stat
+            task patch:stat
             echo '```'
             echo
             echo "## Sync log"

@@ -14,6 +14,9 @@ A tag whose version has no entries fails the run before anything reaches the reg
 
 The tag is the trigger, so it is pushed last.
 
+Everything a person runs lives in `Taskfile.yml`.
+The one script left in `package.json` is `prepack`, which npm fires while packing the tarball, and which builds the `lib/` the tree does not carry.
+
 ## The steps
 
 1. Move the entries under `## [Unreleased]` in `CHANGELOG.md` to a section for the new version, and commit that.

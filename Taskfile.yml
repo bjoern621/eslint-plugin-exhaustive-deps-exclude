@@ -1,0 +1,69 @@
+version: "3"
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  build:
+    desc: Compile src/ to lib/
+    cmds:
+      - npx tsc
+
+  test:
+    desc: Build, then run the case suite against the rule
+    deps: [build]
+    cmds:
+      - node --test tests/*.test.js
+
+  patch:
+    desc: "Print the local delta against the pinned upstream (args: -- --stat)"
+    cmds:
+      - ./scripts/show-patch.sh {{.CLI_ARGS}}
+
+  patch:stat:
+    desc: Count the local delta per file
+    cmds:
+      - ./scripts/show-patch.sh --stat
+
+  sync:
+    desc: "Merge upstream over the pin (args: -- --ref <git ref>)"
+    cmds:
+      - ./scripts/sync-upstream.sh {{.CLI_ARGS}}
+
+  sync:check:
+    desc: Report upstream drift without writing
+    cmds:
+      - ./scripts/sync-upstream.sh --check
+
+  banner:
+    desc: Rewrite the README upstream block from the pin
+    cmds:
+      - ./scripts/upstream-banner.sh
+
+  banner:check:
+    desc: Refuse a README block naming another commit than the pin
+    cmds:
+      - ./scripts/upstream-banner.sh --check
+
+  markers:
+    desc: Refuse conflict markers left in src/ or vendor/
+    cmds:
+      - |
+        if grep -rEn '^(<<<<<<<|>>>>>>>|=======$)' src/ vendor/; then
+          echo "merge markers left in the tree" >&2
+          exit 1
+        fi
+
+  notes:
+    desc: "Print the changelog entries for one version (args: -- 2.0.0)"
+    cmds:
+      - ./scripts/changelog-section.sh {{.CLI_ARGS}}
+
+  lint:
+    desc: Lint the workflows and the scripts, from the dev shell
+    cmds:
+      - actionlint .github/workflows/*.yml
+      - shellcheck scripts/*.sh

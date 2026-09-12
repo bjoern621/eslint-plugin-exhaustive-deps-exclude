@@ -10,7 +10,7 @@ Two files come from `eslint-plugin-react-hooks` rather than being written here.
 
 The live files under `src/` are the editable ones.
 The pristine copies exist to be a merge base, so they are never edited by hand.
-That pairing is what makes the local delta computable at any time: `npm run patch` prints it as a unified diff, and `npm run patch -- --stat` counts it.
+That pairing is what makes the local delta computable at any time: `task patch` prints it as a unified diff, and `task patch:stat` counts it.
 
 ## Two pipelines
 
@@ -32,12 +32,12 @@ Choosing a three-way merge over a patch series keeps `src/` directly editable, w
 
 ## By hand
 
-`npm run sync:check` reports drift and writes nothing.
-`npm run sync` performs the merge, and `--ref` picks a React ref other than `main`.
+`task sync:check` reports drift and writes nothing.
+`task sync` performs the merge, and `task sync -- --ref <git ref>` picks a React ref other than `main`.
 Exit status is 0 for a clean merge, 1 when markers were written, 2 for drift under `--check` and 3 for a failed fetch.
 
 A merge that reports conflicts leaves a working tree that needs a person.
-`git diff` shows what upstream contributed, the markers show where it collided, and `npm test` confirms the resolution.
+`git diff` shows what upstream contributed, the markers show where it collided, and `task test` confirms the resolution.
 
 ## The known collision
 

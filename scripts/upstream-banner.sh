@@ -36,6 +36,8 @@ fi
 
 # The canary a commit was released as carries the short revision, so the registry answers which version the pin is.
 short=${pinned:0:8}
+# The node program is quoted against the shell, taking the revision as an argument instead.
+# shellcheck disable=SC2016
 version=$(npm view "$UPSTREAM_PACKAGE" versions --json 2>/dev/null |
     node -e '
         let raw = "";

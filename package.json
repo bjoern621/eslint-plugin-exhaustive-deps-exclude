@@ -25,12 +25,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "test": "npm run build && node --test tests/*.test.js",
-        "build": "tsc",
-        "prepack": "npm run build",
-        "patch": "./scripts/show-patch.sh",
-        "sync": "./scripts/sync-upstream.sh",
-        "sync:check": "./scripts/sync-upstream.sh --check"
+        "prepack": "tsc"
     },
     "devDependencies": {
         "@types/eslint": "^9.6.1",
