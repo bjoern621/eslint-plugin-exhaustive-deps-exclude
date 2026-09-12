@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The floor comes from engines.node, the ceiling from the current LTS.
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
+
+      - name: Report the local delta against the pinned upstream
+        run: npm run patch -- --stat
+
+      # A conflict marker compiles under @ts-nocheck, so it is grepped for rather than type-checked.
+      - name: Refuse leftover merge markers
+        run: |
+          if grep -rEn '^(<<<<<<<|>>>>>>>|=======$)' src/ vendor/; then
+            echo "merge markers left in the tree" >&2
+            exit 1
+          fi

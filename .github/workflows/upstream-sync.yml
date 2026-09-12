@@ -1,0 +1,116 @@
+name: Upstream sync
+
+on:
+  schedule:
+    # Monday 04:00 UTC. The upstream file changes a few times a year, so a weekly look is ahead of it.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Upstream git ref to sync from
+        default: main
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  SYNC_BRANCH: upstream-sync
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Merge upstream over the pinned revision
+        id: sync
+        run: |
+          # Redirected rather than piped, so the recorded status is the script's and not tee's.
+          set +e
+          ./scripts/sync-upstream.sh --ref "${{ inputs.ref || 'main' }}" > sync.log 2>&1
+          status=$?
+          set -e
+          cat sync.log
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and test the merge result
+        id: verify
+        if: steps.sync.outputs.changed == 'true'
+        continue-on-error: true
+        run: npm test 2>&1 | tee test.log
+
+      - name: Open or update the sync pull request
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_STATUS: ${{ steps.sync.outputs.status }}
+          TEST_RESULT: ${{ steps.verify.outcome }}
+        run: |
+          pinned=$(cat vendor/UPSTREAM_REF)
+
+          if [ "$MERGE_STATUS" = "0" ]; then
+            merge_line="Merged clean, no conflict markers."
+          else
+            merge_line="**$MERGE_STATUS conflict(s) left as markers in \`src/\`.** Resolve before merging."
+          fi
+
+          {
+            echo "Upstream moved to [\`${pinned:0:12}\`](https://github.com/facebook/react/commit/$pinned)."
+            echo
+            echo "- Merge: $merge_line"
+            echo "- Tests: \`$TEST_RESULT\`"
+            echo
+            echo "## Local delta after the merge"
+            echo
+            echo '```'
+            ./scripts/show-patch.sh --stat
+            echo '```'
+            echo
+            echo "## Sync log"
+            echo
+            echo '```'
+            cat sync.log
+            echo '```'
+            if [ "$TEST_RESULT" != "success" ]; then
+              echo
+              echo "## Test output"
+              echo
+              echo '```'
+              tail -60 test.log
+              echo '```'
+            fi
+            echo
+            echo "docs/upstream-sync.md describes what this pipeline does and how to take it over by hand."
+          } > body.md
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$SYNC_BRANCH"
+          git add -A
+          git commit -m "chore: sync vendored react-hooks sources to ${pinned:0:12}"
+          git push --force origin "$SYNC_BRANCH"
+
+          # A run while the previous PR is still open updates that one rather than stacking another.
+          existing=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --body-file body.md
+          else
+            gh pr create \
+              --head "$SYNC_BRANCH" \
+              --title "chore: sync vendored react-hooks sources to ${pinned:0:12}" \
+              --body-file body.md
+          fi
