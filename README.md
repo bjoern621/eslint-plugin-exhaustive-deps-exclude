@@ -222,8 +222,7 @@ export default [
 ];
 ```
 
-Both rules report the same missing dependencies, so leaving React's on reports each one twice.
-A rule set to `off` needs no plugin behind it, so `react-hooks` can stay uninstalled.
+Both rules report the same missing dependencies, so leaving React's on would report each one twice.
 
 ### Usage
 
