@@ -1,5 +1,7 @@
 # exhaustive-deps-exclude
 
+[![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude)
+
 ## The Problem
 
 React's `useEffect` has a simple mental model: <ins>the code inside executes whenever one of the dependencies changes</ins>. The dependency array is supposed to give developers control over _when_ effects run.
@@ -237,8 +239,3 @@ useEffect(() => {
 ```
 
 This plugin gives you **selective exclusion** while still catching genuine mistakes. You explicitly declare which dependencies you're intentionally excluding and the plugin verifies everything else is correct.
-
-## Docs
-
--   [What an exclusion reaches](docs/exclusion-scope.md): where the comment is read from, and which name matches which dependency.
--   [Keeping the vendored rule current](docs/upstream-sync.md): how the vendored React rule tracks upstream, and what to do when a merge conflicts.
