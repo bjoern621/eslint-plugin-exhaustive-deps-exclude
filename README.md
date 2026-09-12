@@ -73,12 +73,14 @@ function ChatRoom({ roomId }) {
     useEffect(() => {
         const connection = createConnection();
         connection.connect();
+
         connection.on("message", (receivedMessage) => {
             setMessages((msgs) => [...msgs, receivedMessage]);
             if (!isMuted) {
                 playSound();
             }
         });
+
         return () => connection.disconnect();
 
         // exhaustive-deps-exclude [isMuted]
