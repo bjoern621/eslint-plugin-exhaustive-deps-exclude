@@ -27,6 +27,7 @@
     "scripts": {
         "test": "npm run build && node --test tests/*.test.js",
         "build": "tsc",
+        "prepack": "npm run build",
         "patch": "./scripts/show-patch.sh",
         "sync": "./scripts/sync-upstream.sh",
         "sync:check": "./scripts/sync-upstream.sh --check"

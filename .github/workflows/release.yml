@@ -1,0 +1,45 @@
+name: Release
+
+# The registry credential is minted per run through npm trusted publishing,
+# configured on the package's npmjs.com settings against this repository and this file name.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  # Trusted publishing exchanges this token for the credential.
+  id-token: write
+
+jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - run: npm ci
+
+      # Trusted publishing needs npm 11.5.1 or newer, ahead of what node bundles.
+      - run: npm install -g npm@latest
+
+      - name: Refuse a tag that disagrees with package.json
+        run: |
+          tag=${GITHUB_REF_NAME#v}
+          pkg=$(node -p "require('./package.json').version")
+          if [ "$tag" != "$pkg" ]; then
+            echo "release tag $tag, package.json $pkg" >&2
+            exit 1
+          fi
+
+      # prepack builds lib/, which the tree does not carry.
+      - run: npm publish
