@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- A suggestion that writes the exclusion comment, offered beside the one that adds the name to the dependency array.
+- `npm test` compiles the sources and runs the case suite.
+
+### Changed
+
+- The rule's documentation link points at this README.
+  It carried the React issue the upstream rule links to.
+
+### Removed
+
+- The page describing what an exclusion reaches.
+  A name is spelled the way the rule reports it, and the README states that in a line.
+
+### Fixed
+
+- The README configures the plugin under flat config.
+  It carried an eslintrc block, which leaves the rule undefined because eslintrc cannot load an ESM-only plugin.
+
 ## [2.0.0]
 
 ### Added

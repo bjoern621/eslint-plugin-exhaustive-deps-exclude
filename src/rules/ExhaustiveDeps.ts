@@ -55,7 +55,7 @@ const rule = {
       description:
         'verifies the list of dependencies for Hooks like useEffect and similar',
       recommended: true,
-      url: 'https://github.com/facebook/react/issues/14920',
+      url: 'https://github.com/bjoern621/eslint-plugin-exhaustive-deps-exclude#readme',
     },
     fixable: 'code',
     hasSuggestions: true,
@@ -1354,7 +1354,11 @@ const rule = {
               'omit',
             )) +
           extraWarning,
-        suggest: [
+        suggest: buildSuggestions(),
+      });
+
+      function buildSuggestions() {
+        const suggestions = [
           {
             desc: `Update the dependencies array to be: [${suggestedDeps
               .map(formatDependency)
@@ -1367,8 +1371,27 @@ const rule = {
               );
             },
           },
-        ],
-      });
+        ];
+
+        if (missingDependencies.size > 0) {
+          // Written against the keys the rule reports, which carry no optional chaining,
+          // so formatDependency stays out of the list the comment holds.
+          const excluded = Array.from(missingDependencies).sort();
+          suggestions.push({
+            desc: `Exclude ${joinEnglish(
+              excluded.map(name => "'" + formatDependency(name) + "'"),
+            )} with an exhaustive-deps-exclude comment`,
+            fix(fixer) {
+              return fixer.insertTextBefore(
+                declaredDependenciesNode,
+                `/* exhaustive-deps-exclude [${excluded.join(', ')}] */ `,
+              );
+            },
+          });
+        }
+
+        return suggestions;
+      }
     }
 
     function visitCallExpression(node: CallExpression): void {

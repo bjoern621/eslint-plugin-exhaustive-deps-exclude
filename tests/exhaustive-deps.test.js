@@ -57,6 +57,16 @@ const exclusionInNestedFunction = `
 
 const replaceDeps = (code, from, to) => code.replace(`}, ${from});`, `}, ${to});`);
 
+// The exclusion fix writes a block comment in front of the array, which it leaves as it stands.
+const withExclusionComment = (code, deps, depsArray) =>
+    replaceDeps(code, depsArray, `/* exhaustive-deps-exclude [${deps.join(", ")}] */ ${depsArray}`);
+
+// Every case here excludes one or two names, which the rule joins without a serial comma.
+const excludeSuggestion = (code, deps, depsArray) => ({
+    desc: `Exclude ${deps.map((dep) => `'${dep}'`).join(" and ")} with an exhaustive-deps-exclude comment`,
+    output: withExclusionComment(code, deps, depsArray),
+});
+
 ruleTester.run("exhaustive-deps", rule, {
     valid: [
         {
@@ -143,6 +153,17 @@ ruleTester.run("exhaustive-deps", rule, {
                 }`,
         },
         {
+            name: "an exclusion applies to a hook named by the additionalHooks option",
+            options: [{ additionalHooks: "useMyEffect" }],
+            code: `
+                function A({ a, b }) {
+                    useMyEffect(() => {
+                        doSomething(a, b);
+                        // exhaustive-deps-exclude [b]
+                    }, [a]);
+                }`,
+        },
+        {
             name: "an exclusion between the callback and the array is found",
             code: `
                 function A({ a, b }) {
@@ -165,6 +186,7 @@ ruleTester.run("exhaustive-deps", rule, {
                             desc: "Update the dependencies array to be: [a, b]",
                             output: replaceDeps(oneNameNotExcluded, "[a]", "[a, b]"),
                         },
+                        excludeSuggestion(oneNameNotExcluded, ["b"], "[a]"),
                     ],
                 },
             ],
@@ -181,6 +203,7 @@ ruleTester.run("exhaustive-deps", rule, {
                             desc: "Update the dependencies array to be: [a, b]",
                             output: replaceDeps(noComment, "[]", "[a, b]"),
                         },
+                        excludeSuggestion(noComment, ["a", "b"], "[]"),
                     ],
                 },
             ],
@@ -245,6 +268,7 @@ ruleTester.run("exhaustive-deps", rule, {
                             desc: "Update the dependencies array to be: [a]",
                             output: replaceDeps(useCallbackWithExclusion, "[]", "[a]"),
                         },
+                        excludeSuggestion(useCallbackWithExclusion, ["a"], "[]"),
                     ],
                 },
             ],
@@ -261,6 +285,7 @@ ruleTester.run("exhaustive-deps", rule, {
                             desc: "Update the dependencies array to be: [a]",
                             output: replaceDeps(exclusionInNestedFunction, "[]", "[a]"),
                         },
+                        excludeSuggestion(exclusionInNestedFunction, ["a"], "[]"),
                     ],
                 },
             ],

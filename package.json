@@ -25,7 +25,8 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "prepack": "tsc"
+        "prepack": "tsc",
+        "test": "tsc && node --test tests/*.test.js"
     },
     "devDependencies": {
         "@types/eslint": "^9.6.1",

@@ -189,19 +189,41 @@ You want to debounce based on `query` changes, not `onSearch` reference changes.
 npm install --save-dev eslint-plugin-exhaustive-deps-exclude
 ```
 
+It runs on ESLint 9 and Node 22, under flat config.
+
 ### Configuration
 
-Add to your `.eslintrc`:
+`configs.recommended` turns React's rule off and this one on:
 
-```json
-{
-    "plugins": ["exhaustive-deps-exclude"],
-    "rules": {
-        "react-hooks/exhaustive-deps": "off",
-        "exhaustive-deps-exclude/exhaustive-deps": "warn"
-    }
-}
+```javascript
+// eslint.config.js
+import exhaustiveDepsExclude from "eslint-plugin-exhaustive-deps-exclude";
+
+export default [
+    { files: ["**/*.{js,jsx,ts,tsx}"], ...exhaustiveDepsExclude.configs.recommended },
+];
 ```
+
+Registering the plugin yourself allows you to set the severity:
+
+```javascript
+// eslint.config.js
+import exhaustiveDepsExclude from "eslint-plugin-exhaustive-deps-exclude";
+
+export default [
+    {
+        files: ["src/**/*.{js,jsx,ts,tsx}"],
+        plugins: { "exhaustive-deps-exclude": exhaustiveDepsExclude },
+        rules: {
+            "react-hooks/exhaustive-deps": "off",
+            "exhaustive-deps-exclude/exhaustive-deps": "warn",
+        },
+    },
+];
+```
+
+Both rules report the same missing dependencies, so leaving React's on reports each one twice.
+A rule set to `off` needs no plugin behind it, so `react-hooks` can stay uninstalled.
 
 ### Usage
 
@@ -214,16 +236,26 @@ useEffect(() => {
 }, [includedDep]);
 ```
 
+A name in the comment spells the dependency the way the rule reports it, so a property read is excluded by its path:
+
+```javascript
+useEffect(() => {
+    connect(config.url);
+    // exhaustive-deps-exclude [config.url]
+}, []);
+```
+
 The plugin will:
 
 -   ✅ Check that all non-excluded dependencies are in the array
 -   ✅ Ignore dependencies listed in the exclude comment
 -   ✅ Warn about unnecessary exclusions (if you exclude something not used in the effect)
 -   ✅ Detect conflicting inclusions/exclusions
+-   ✅ Offer the exclusion comment as an editor fix, next to the fix that adds the dependency
 
 ## (Bonus) Why not use '// eslint-ignore-next-line react-hooks/exhaustive-deps'?
 
-Because completely disabling the rule means you get **zero** linting help. You could accidentally forget to include a dependency that _should_ be there, and ESLint won't catch it.
+Because completely disabling the rule means **zero** linting help. You could accidentally forget to include a dependency that _should_ be there, and ESLint won't catch it.
 
 **With `eslint-disable-next-line`:**
 
