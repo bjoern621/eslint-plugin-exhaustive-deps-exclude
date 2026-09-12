@@ -1,8 +1,9 @@
 # Changelog
 
-What changed in each release, for the person upgrading.
-The release pipeline takes a release body from the section matching the tag, so a version without entries here cannot be released.
-Headings follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), numbering follows [semantic versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
