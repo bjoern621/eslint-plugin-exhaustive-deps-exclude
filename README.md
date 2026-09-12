@@ -252,7 +252,7 @@ The plugin will:
 -   ✅ Detect conflicting inclusions/exclusions
 -   ✅ Offer the exclusion comment as an editor fix, next to the fix that adds the dependency
 
-## (Bonus) Why not use '// eslint-ignore-next-line react-hooks/exhaustive-deps'?
+## (Bonus:) Why not use '// eslint-ignore-next-line react-hooks/exhaustive-deps'?
 
 Because completely disabling the rule means **zero** linting help. You could accidentally forget to include a dependency that _should_ be there, and ESLint won't catch it.
 
