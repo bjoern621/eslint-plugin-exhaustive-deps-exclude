@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         # The floor comes from engines.node, the ceiling from the current LTS.
-        node: [18, 20, 22]
+        node: [22, 24]
     steps:
       - uses: actions/checkout@v4
 
