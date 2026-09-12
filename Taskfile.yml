@@ -62,6 +62,11 @@ tasks:
     cmds:
       - ./scripts/changelog-section.sh {{.CLI_ARGS}}
 
+  staged:
+    desc: List the staged versions waiting for approval on npm
+    cmds:
+      - npm stage list
+
   lint:
     desc: Lint the workflows and the scripts, from the dev shell
     cmds:

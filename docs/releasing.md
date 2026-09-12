@@ -1,8 +1,8 @@
 # Cutting a release
 
 A release is a tag.
-Pushing a tag matching `v*` runs the suite, publishes to npm, and opens the GitHub release with the changelog entries as its body.
-Nothing is published from a workstation.
+Pushing a tag matching `v*` runs the suite, stages the version on npm, and opens the GitHub release with the changelog entries as its body.
+A staged version reaches the registry once a maintainer approves it, which is the one step a workstation performs.
 
 ## The three things a version touches
 
@@ -22,8 +22,10 @@ The one script left in `package.json` is `prepack`, which npm fires while packin
 1. Move the entries under `## [Unreleased]` in `CHANGELOG.md` to a section for the new version, and commit that.
 2. `npm version major`, or `minor`, or `patch`. It writes `package.json`, commits, and tags `v<version>`.
 3. `git push --follow-tags`.
+4. Approve the staged version with two-factor authentication, from the Staged Packages tab on npmjs.com or with `npm stage approve <stage-id>`. `task staged` lists what is waiting.
 
-The run then tests on every supported Node version, refuses a tag disagreeing with `package.json`, reads the release body out of the changelog, publishes, and creates the release.
+The run tests on every supported Node version, refuses a tag disagreeing with `package.json`, reads the release body out of the changelog, stages the tarball, and creates the release.
+The GitHub release stands from that moment, and the npm version follows the approval.
 
 ## What decides the number
 
@@ -36,3 +38,6 @@ The vendored React revision moves on its own schedule, and the README banner nam
 The registry credential is minted per run through npm trusted publishing.
 It is bound on npmjs.com to this repository and to `.github/workflows/release.yml`, so renaming that file breaks publishing until the binding follows.
 No npm token lives in repository secrets.
+
+The binding grants staging, which is why the run calls `npm stage publish`.
+Granting direct publishing as well is a setting on the same page, and it removes the approval step along with the human in front of it.

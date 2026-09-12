@@ -47,10 +47,20 @@ jobs:
       - name: Take the release body from the changelog
         run: ./scripts/changelog-section.sh "$version" > notes.md
 
+      # Staged rather than published, because the trusted publisher grants staging alone.
       # prepack builds lib/, which the tree does not carry.
-      - run: npm publish
+      - run: npm stage publish
 
       - name: Publish the GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --notes-file notes.md
+
+      - name: Say what the release still waits on
+        run: |
+          {
+            echo "### $GITHUB_REF_NAME is staged"
+            echo
+            echo "The version reaches the registry once a maintainer approves it with two-factor authentication:"
+            echo "the Staged Packages tab on npmjs.com, or \`npm stage list\` then \`npm stage approve <stage-id>\`."
+          } >> "$GITHUB_STEP_SUMMARY"
