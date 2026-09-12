@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0]
+
 ### Added
 
 - A suggestion that writes the exclusion comment, offered beside the one that adds the name to the dependency array.
