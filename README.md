@@ -63,7 +63,7 @@ function ChatRoom({ roomId }) {
 
 With `useEffectEvent`, you need to (1) extract logic, (2) import another hook, and (3) restructure your code. 😮‍💨
 
-With this plugin, you just add one comment explaining your intent:
+**With this plugin, you just add one comment explaining your intent:**
 
 ```javascript
 function ChatRoom({ roomId }) {
