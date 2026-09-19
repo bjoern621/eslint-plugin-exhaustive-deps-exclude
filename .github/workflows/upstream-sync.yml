@@ -134,18 +134,18 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           CHECKED: ${{ steps.checked.outputs.sha }}
         run: |
-          # The merge leaves the tree on the sync branch, so the badge starts from the branch this run began on.
+          # The merge leaves the tree on the sync branch, so the badge data starts from the branch this run began on.
           git fetch origin "$BRANCH"
           git checkout -f -B "$BRANCH" "origin/$BRANCH"
 
           ./scripts/upstream-checked-badge.sh "$CHECKED"
-          if git diff --quiet -- README.md; then
+          if git diff --quiet -- vendor/upstream-checked.json; then
             echo "badge already names $CHECKED"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md
+          git add vendor/upstream-checked.json
           git commit -m "chore: record the upstream check against ${CHECKED:0:12}"
           git push origin "HEAD:$BRANCH"
