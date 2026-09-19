@@ -19,7 +19,7 @@ The one script left in `package.json` is `prepack`, which npm fires while packin
 
 ## The steps
 
-1. Move the entries under `## [Unreleased]` in `CHANGELOG.md` to a section for the new version, and commit that.
+1. Move the entries under `## [Unreleased]` in `CHANGELOG.md` to a section for the new version, headed `## [<version>] - <YYYY-MM-DD>`, and add the compare link for it at the foot of the file. Commit that.
 2. `npm version major`, or `minor`, or `patch`. It writes `package.json`, commits, and tags `v<version>`.
 3. `git push --follow-tags`.
 4. Approve the staged version with two-factor authentication, from the Staged Packages tab on npmjs.com or with `npm stage approve <stage-id>`. `task staged` lists what is waiting.
