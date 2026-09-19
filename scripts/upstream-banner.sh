@@ -52,11 +52,11 @@ version=$(npm view "$UPSTREAM_PACKAGE" versions --json 2>/dev/null |
 commit_url=https://github.com/facebook/react/commit/$pinned
 
 if [ -n "$version" ]; then
-    line="> **Based on** React's own \`exhaustive-deps\` rule, vendored from [\`$UPSTREAM_PACKAGE@$version\`](https://www.npmjs.com/package/$UPSTREAM_PACKAGE/v/$version)
+    line="> **Based on** React's own \`exhaustive-deps\` rule, copied from [\`$UPSTREAM_PACKAGE@$version\`](https://www.npmjs.com/package/$UPSTREAM_PACKAGE/v/$version)
 > at React commit [\`$pinned\`]($commit_url)."
 else
     # A commit outside the canary line has no version to name.
-    line="> **Based on** React's own \`exhaustive-deps\` rule, vendored from \`$UPSTREAM_PACKAGE\` at React commit [\`$pinned\`]($commit_url)."
+    line="> **Based on** React's own \`exhaustive-deps\` rule, copied from \`$UPSTREAM_PACKAGE\` at React commit [\`$pinned\`]($commit_url)."
 fi
 
 block=$(printf '%s\n%s\n%s\n' "$START" "$line" "$END")
