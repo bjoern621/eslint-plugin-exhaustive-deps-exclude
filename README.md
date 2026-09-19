@@ -190,7 +190,7 @@ Install it as a dev dependency, under the package manager the project already us
 ```bash
 npm install --save-dev eslint-plugin-exhaustive-deps-exclude
 # or
-pnpm add -D eslint-plugin-exhaustive-deps-exclude
+pnpm add --save-dev eslint-plugin-exhaustive-deps-exclude
 # or
 yarn add --dev eslint-plugin-exhaustive-deps-exclude
 ```
@@ -211,27 +211,7 @@ export default [
 ];
 ```
 
-Registering the plugin yourself allows you to set the severity:
-
-```javascript
-// eslint.config.js
-import exhaustiveDepsExclude from "eslint-plugin-exhaustive-deps-exclude";
-
-export default [
-    {
-        files: ["src/**/*.{js,jsx,ts,tsx}"],
-        plugins: { "exhaustive-deps-exclude": exhaustiveDepsExclude },
-        rules: {
-            "react-hooks/exhaustive-deps": "off",
-            "exhaustive-deps-exclude/exhaustive-deps": "warn",
-        },
-    },
-];
-```
-
-Both rules report the same missing dependencies, so leaving React's on would report each one twice.
-
-Alongside React's own recommended config, the spread order decides which setting survives:
+Beside React's own recommended rules, this plugin's rules come last, and a severity of your own comes after both:
 
 ```javascript
 // eslint.config.js
@@ -248,13 +228,15 @@ export default [
         rules: {
             ...reactHooks.configs.recommended.rules,
             ...exhaustiveDepsExclude.configs.recommended.rules,
+            "exhaustive-deps-exclude/exhaustive-deps": "warn",
         },
     },
 ];
 ```
 
+Both rules report the same missing dependencies, and leaving React's on reports each one twice.
 React's recommended rules switch `react-hooks/exhaustive-deps` on, and this plugin's rules switch it back off.
-Spreading the two the other way around would leave React's rule on, and every missing dependency would be reported twice.
+The reverse order would leave React's rule on.
 
 ### Usage
 

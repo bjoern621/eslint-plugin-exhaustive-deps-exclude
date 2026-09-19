@@ -13,7 +13,6 @@ if [ -z "$version" ]; then
     exit 1
 fi
 
-# The link definitions sit under the last section, and they belong to no release body.
 section=$(awk -v want="## [$version]" '
     index($0, want) == 1 { taking = 1; next }
     taking && /^## / { exit }

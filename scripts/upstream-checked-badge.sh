@@ -14,7 +14,7 @@ DATA_FILE=vendor/upstream-checked.json
 
 if [ "${1:-}" = "--check" ]; then
     status=0
-    # The badge URL carries the path encoded, so the file name is what both spellings share.
+    # The badge URL carries the path encoded. The file name is what both spellings share.
     if ! grep -qF "$(basename "$DATA_FILE")" README.md; then
         echo "README carries no badge reading $DATA_FILE" >&2
         status=1
@@ -55,7 +55,7 @@ case "$checked_on" in
         ;;
 esac
 
-# Shields reads one field per badge, so the rendered text is assembled here rather than there.
+# Shields reads one field per badge. The rendered text is assembled here rather than there.
 cat > "$DATA_FILE" <<JSON
 {
     "sha": "$sha",
