@@ -39,7 +39,7 @@ fetched_ref=$(curl -sSfL --retry 3 --retry-delay 2 --retry-all-errors -H 'Accept
     exit 3
 }
 
-# The badge step reads this before the merge, so the commit goes out alone on stdout.
+# The badge step reads this before the merge
 if [ "$head_only" -eq 1 ]; then
     printf '%s\n' "$fetched_ref"
     exit 0

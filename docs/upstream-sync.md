@@ -25,7 +25,7 @@ It builds, runs the rule against the case suite in `tests/`, and greps for lefto
 The marker grep is load-bearing: the rule file carries `@ts-nocheck`, so the compiler accepts a file a merge has mangled, and the suite plus the grep are the only gates.
 
 Every run records the commit it compared against in `vendor/upstream-checked.json`, along with the day it ran, whether or not upstream had moved.
-The README badge reads that file through Shields at render time, so the npm page and the repository front page both show the last check rather than the state at publishing time.
+The README badge reads that file through Shields at render time. The npm page and the repository front page both show the last check rather than the state at publishing time.
 The schedule runs on the default branch, which is the copy the badge URL names.
 The badge answers how fresh the last look was.
 The banner under it names the commit the vendored copies carry.

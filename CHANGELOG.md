@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - A README badge naming the upstream commit the last sync run compared against and the day it ran.
-  It reads `vendor/upstream-checked.json`, which the schedule commits, so a published page shows the last check rather than the state at publishing time.
+  It reads `vendor/upstream-checked.json`, which the schedule commits. A published page then shows the last check rather than the state at publishing time.
 
 ### Changed
 

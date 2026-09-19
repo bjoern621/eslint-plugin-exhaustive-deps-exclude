@@ -126,7 +126,6 @@ jobs:
               --body-file body.md
           fi
 
-      # Last, so a refused push leaves the pull request above it standing.
       - name: Record the upstream commit this run checked
         if: always() && steps.checked.outputs.sha != ''
         continue-on-error: true
@@ -134,7 +133,7 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           CHECKED: ${{ steps.checked.outputs.sha }}
         run: |
-          # The merge leaves the tree on the sync branch, so the badge data starts from the branch this run began on.
+          # The merge leaves the tree on the sync branch. The badge data starts from the branch this run began on.
           git fetch origin "$BRANCH"
           git checkout -f -B "$BRANCH" "origin/$BRANCH"
 
