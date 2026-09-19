@@ -164,6 +164,26 @@ ruleTester.run("exhaustive-deps", rule, {
                 }`,
         },
         {
+            name: "an exclusion applies to useImperativeHandle",
+            code: `
+                function A({ ref, a, b }) {
+                    useImperativeHandle(ref, () => {
+                        return { call: () => doSomething(a, b) };
+                        // exhaustive-deps-exclude [b]
+                    }, [a]);
+                }`,
+        },
+        {
+            name: "an exclusion applies to useLayoutEffect",
+            code: `
+                function A({ a, b }) {
+                    useLayoutEffect(() => {
+                        doSomething(a, b);
+                        // exhaustive-deps-exclude [b]
+                    }, [a]);
+                }`,
+        },
+        {
             name: "an exclusion between the callback and the array is found",
             code: `
                 function A({ a, b }) {
@@ -204,6 +224,38 @@ ruleTester.run("exhaustive-deps", rule, {
                             output: replaceDeps(noComment, "[]", "[a, b]"),
                         },
                         excludeSuggestion(noComment, ["a", "b"], "[]"),
+                    ],
+                },
+            ],
+        },
+        {
+            name: "an unnecessary dependency stays reported, exclusion comment or not",
+            code: `
+                function A({ a, keepAlive }) {
+                    return useCallback(() => {
+                        doWork(a);
+                        // exhaustive-deps-exclude [keepAlive]
+                    }, [a, keepAlive]);
+                }`,
+            errors: [
+                {
+                    message:
+                        "React Hook useCallback excludes 'keepAlive', which the dependency array also lists. Remove it from the array or from the exhaustive-deps-exclude comment.",
+                },
+                {
+                    message:
+                        "React Hook useCallback has an unnecessary dependency: 'keepAlive'. Either exclude it or remove the dependency array.",
+                    suggestions: [
+                        {
+                            desc: "Update the dependencies array to be: [a]",
+                            output: `
+                function A({ a, keepAlive }) {
+                    return useCallback(() => {
+                        doWork(a);
+                        // exhaustive-deps-exclude [keepAlive]
+                    }, [a]);
+                }`,
+                        },
                     ],
                 },
             ],
