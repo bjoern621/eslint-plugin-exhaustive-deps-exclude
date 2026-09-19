@@ -198,7 +198,8 @@ pnpm add -D eslint-plugin-exhaustive-deps-exclude
 yarn add --dev eslint-plugin-exhaustive-deps-exclude
 ```
 
-It runs on ESLint 9 and 10, Node 20.19 and newer, under flat config.
+It runs on ESLint 8.57, 9 and 10, Node 20.19 and newer, under flat config.
+ESLint 8 reads a flat config once `ESLINT_USE_FLAT_CONFIG=true` sits in the environment.
 
 ### Configuration
 
