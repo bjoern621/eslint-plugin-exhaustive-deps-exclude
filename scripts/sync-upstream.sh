@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Merges the current eslint-plugin-react-hooks sources into src/ over the pinned revision.
-# Usage: sync-upstream.sh [--check] [--ref <git ref>]
+# Usage: sync-upstream.sh [--check] [--head] [--ref <git ref>]
 # --check reports drift and writes nothing.
+# --head prints the commit the ref resolves to and writes nothing.
 # Exit 0 clean, 1 conflicts written as markers, 2 drift under --check, 3 fetch failed.
 set -uo pipefail
 
@@ -18,10 +19,12 @@ FILES=(
 )
 
 check_only=0
+head_only=0
 ref=main
 while [ $# -gt 0 ]; do
     case "$1" in
         --check) check_only=1; shift ;;
+        --head) head_only=1; shift ;;
         --ref) ref=$2; shift 2 ;;
         *) echo "unknown argument: $1" >&2; exit 3 ;;
     esac
@@ -35,6 +38,12 @@ fetched_ref=$(curl -sSfL --retry 3 --retry-delay 2 --retry-all-errors -H 'Accept
     echo "cannot resolve $UPSTREAM_REPO@$ref" >&2
     exit 3
 }
+
+# The badge step reads this before the merge, so the commit goes out alone on stdout.
+if [ "$head_only" -eq 1 ]; then
+    printf '%s\n' "$fetched_ref"
+    exit 0
+fi
 
 echo "pinned:  $pinned"
 echo "fetched: $fetched_ref"
