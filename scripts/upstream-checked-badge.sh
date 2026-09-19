@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Rewrites the README badge naming the upstream commit the last check compared against.
-# Usage: upstream-checked-badge.sh <commit sha> | --check
+# Usage: upstream-checked-badge.sh <commit sha> [<YYYY-MM-DD>] | --check
+# The date defaults to today in UTC, and names the day the check ran.
 # --check reports whether the block the sync workflow writes into is still there, and writes nothing.
 # Exit 0 rewritten or present, 1 the block is missing under --check,
 # 3 the block is missing while writing or the argument is no commit sha.
@@ -37,13 +38,24 @@ if [ ${#sha} -lt 7 ]; then
     exit 3
 fi
 
+checked_on=${2:-$(date -u +%F)}
+case "$checked_on" in
+    [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]) ;;
+    *)
+        echo "date is not YYYY-MM-DD: $checked_on" >&2
+        exit 3
+        ;;
+esac
+
 if ! block_present; then
     echo "README carries no checked badge" >&2
     exit 3
 fi
 
-# Shields reads the label and the message out of the path, so a space goes in encoded.
-badge="[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-${sha:0:8}-informational \"Newest React commit the copied rule has been compared against\")](https://github.com/$UPSTREAM_REPO/commit/$sha)"
+# Shields reads the label and the message out of the path, so a space goes in encoded
+# and a dash inside the message goes in doubled.
+message="${sha:0:8}%20(${checked_on//-/--})"
+badge="[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-$message-informational \"React commit the copied rule was compared against, and the day of that check\")](https://github.com/$UPSTREAM_REPO/commit/$sha)"
 # One line, so the badge sits beside the one ahead of it rather than under it.
 block="$START$badge$END"
 
@@ -56,4 +68,4 @@ BLOCK="$block" START="$START" END="$END" node -e '
     fs.writeFileSync("README.md", readme.slice(0, from) + BLOCK.trimEnd() + readme.slice(to));
 ' || exit 3
 
-echo "README checked badge set to $sha"
+echo "README checked badge set to $sha, checked on $checked_on"

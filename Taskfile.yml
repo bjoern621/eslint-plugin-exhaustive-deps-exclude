@@ -34,7 +34,7 @@ tasks:
       - ./scripts/sync-upstream.sh {{.CLI_ARGS}}
 
   checked:
-    desc: "Set the README badge to the upstream commit a check compared against (args: -- <sha>)"
+    desc: "Set the README badge to the upstream commit a check compared against (args: -- <sha> [<YYYY-MM-DD>])"
     cmds:
       - ./scripts/upstream-checked-badge.sh {{.CLI_ARGS}}
 
