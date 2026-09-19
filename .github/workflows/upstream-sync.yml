@@ -36,12 +36,33 @@ jobs:
 
       - run: npm ci
 
+      - name: Record the upstream commit this run checks
+        id: checked
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          checked=$(./scripts/sync-upstream.sh --head --ref "${{ inputs.ref || 'main' }}")
+          echo "sha=$checked" >> "$GITHUB_OUTPUT"
+
+          ./scripts/upstream-checked-badge.sh "$checked"
+          if git diff --quiet -- README.md; then
+            echo "badge already names $checked"
+            exit 0
+          fi
+
+          # The badge goes out before the merge, which rewrites the banner in the same file for the pull request.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: record the upstream check against ${checked:0:12}"
+          git push origin "HEAD:$BRANCH"
+
       - name: Merge upstream over the pinned revision
         id: sync
         run: |
           # Redirected rather than piped, so the recorded status is the script's and not tee's.
           set +e
-          ./scripts/sync-upstream.sh --ref "${{ inputs.ref || 'main' }}" > sync.log 2>&1
+          ./scripts/sync-upstream.sh --ref "${{ steps.checked.outputs.sha }}" > sync.log 2>&1
           status=$?
           set -e
           cat sync.log

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- A README badge naming the upstream commit the last sync run compared against, written back to the branch that ran.
+
 ### Changed
 
 - The peer range accepts ESLint 10 beside ESLint 9.

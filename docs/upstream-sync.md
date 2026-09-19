@@ -24,6 +24,10 @@ The verification pipeline answers whether the result still behaves.
 It builds, runs the rule against the case suite in `tests/`, and greps for leftover conflict markers.
 The marker grep is load-bearing: the rule file carries `@ts-nocheck`, so the compiler accepts a file a merge has mangled, and the suite plus the grep are the only gates.
 
+Every run records the commit it compared against in the README badge, on the branch the run started from, whether or not upstream had moved.
+The badge answers how fresh the last look was; the banner under it answers which commit the vendored copies carry.
+`task checked -- <sha>` sets the badge by hand.
+
 A scheduled run joins the two and opens a pull request carrying the merge outcome, the test outcome and the delta.
 A run finding no change opens nothing.
 A run while a previous pull request is still open updates that one, so the queue holds at most one sync.
