@@ -261,7 +261,7 @@ Spreading the two the other way around would leave React's rule on, and every mi
 
 ### Usage
 
-Add an inline comment before the closing bracket of your dependency array:
+Add an inline comment before the closing bracket of your dependency array (`useEffect`, `useLayoutEffect`, `useCallback`, `useMemo`, `useImperativeHandle`, or a hook `additionalHooks` names):
 
 ```javascript
 useEffect(() => {
