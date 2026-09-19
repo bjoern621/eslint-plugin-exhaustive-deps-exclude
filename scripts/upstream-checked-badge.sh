@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Rewrites the README badge naming the upstream commit the last check compared against.
-# Usage: upstream-checked-badge.sh <commit sha>
-# Exit 0 rewritten, 3 the badge block is missing or the argument is no commit sha.
+# Usage: upstream-checked-badge.sh <commit sha> | --check
+# --check reports whether the block the sync workflow writes into is still there, and writes nothing.
+# Exit 0 rewritten or present, 1 the block is missing under --check,
+# 3 the block is missing while writing or the argument is no commit sha.
 set -uo pipefail
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
@@ -10,6 +12,18 @@ cd "$repo_root" || exit 3
 UPSTREAM_REPO=${UPSTREAM_REPO:-facebook/react}
 START='<!-- checked:start -->'
 END='<!-- checked:end -->'
+
+block_present() {
+    grep -qF "$START" README.md && grep -qF "$END" README.md
+}
+
+if [ "${1:-}" = "--check" ]; then
+    if block_present; then
+        exit 0
+    fi
+    echo "README carries no checked badge, which the sync workflow writes into" >&2
+    exit 1
+fi
 
 sha=${1:-}
 case "$sha" in
@@ -23,7 +37,7 @@ if [ ${#sha} -lt 7 ]; then
     exit 3
 fi
 
-if ! grep -qF "$START" README.md || ! grep -qF "$END" README.md; then
+if ! block_present; then
     echo "README carries no checked badge" >&2
     exit 3
 fi

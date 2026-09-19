@@ -36,26 +36,11 @@ jobs:
 
       - run: npm ci
 
-      - name: Record the upstream commit this run checks
+      - name: Resolve the upstream commit this run checks
         id: checked
-        env:
-          BRANCH: ${{ github.ref_name }}
         run: |
           checked=$(./scripts/sync-upstream.sh --head --ref "${{ inputs.ref || 'main' }}")
           echo "sha=$checked" >> "$GITHUB_OUTPUT"
-
-          ./scripts/upstream-checked-badge.sh "$checked"
-          if git diff --quiet -- README.md; then
-            echo "badge already names $checked"
-            exit 0
-          fi
-
-          # The badge goes out before the merge, which rewrites the banner in the same file for the pull request.
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git commit -m "chore: record the upstream check against ${checked:0:12}"
-          git push origin "HEAD:$BRANCH"
 
       - name: Merge upstream over the pinned revision
         id: sync
@@ -140,3 +125,27 @@ jobs:
               --title "chore: sync vendored react-hooks sources to ${pinned:0:12}" \
               --body-file body.md
           fi
+
+      # Last, so a refused push leaves the pull request above it standing.
+      - name: Record the upstream commit this run checked
+        if: always() && steps.checked.outputs.sha != ''
+        continue-on-error: true
+        env:
+          BRANCH: ${{ github.ref_name }}
+          CHECKED: ${{ steps.checked.outputs.sha }}
+        run: |
+          # The merge leaves the tree on the sync branch, so the badge starts from the branch this run began on.
+          git fetch origin "$BRANCH"
+          git checkout -f -B "$BRANCH" "origin/$BRANCH"
+
+          ./scripts/upstream-checked-badge.sh "$CHECKED"
+          if git diff --quiet -- README.md; then
+            echo "badge already names $CHECKED"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: record the upstream check against ${CHECKED:0:12}"
+          git push origin "HEAD:$BRANCH"

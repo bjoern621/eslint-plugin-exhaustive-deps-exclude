@@ -38,6 +38,11 @@ tasks:
     cmds:
       - ./scripts/upstream-checked-badge.sh {{.CLI_ARGS}}
 
+  checked:check:
+    desc: Report whether the README still carries the badge block the sync workflow writes into
+    cmds:
+      - ./scripts/upstream-checked-badge.sh --check
+
   sync:check:
     desc: Report upstream drift without writing
     cmds:
