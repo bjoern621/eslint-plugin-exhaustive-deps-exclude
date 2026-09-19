@@ -12,8 +12,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The floor comes from engines.node, the ceiling from the current LTS.
-        node: [22, 24]
+        # The floor comes from engines.node, the ceiling from the newest release line.
+        node: [20, 22, 24, 26]
+        # Both majors the peer range accepts.
+        eslint: [9, 10]
     steps:
       - uses: actions/checkout@v7
 
@@ -28,6 +30,9 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: npm ci
+
+      - name: Take the ESLint major under test
+        run: npm install --no-save eslint@${{ matrix.eslint }}
 
       - run: task test
 

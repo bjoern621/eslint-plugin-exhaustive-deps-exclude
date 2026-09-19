@@ -12,7 +12,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in {
         # Dev shell:
-        #   nodejs_24    the version the release job publishes from, and the matrix ceiling
+        #   nodejs_24    the version the release job publishes from
         #   go-task      the task runner, see Taskfile.yml
         #   actionlint   linter for .github/workflows
         #   shellcheck   linter for scripts/

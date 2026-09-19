@@ -31,7 +31,7 @@
     "devDependencies": {
         "@types/eslint": "^9.6.1",
         "@types/estree": "^1.0.8",
-        "eslint": "^9.0.0",
+        "eslint": "^10.0.0",
         "typescript": "^5.9.3"
     },
     "files": [
@@ -39,9 +39,9 @@
         "CHANGELOG.md"
     ],
     "peerDependencies": {
-        "eslint": "^9.0.0"
+        "eslint": "^9.0.0 || ^10.0.0"
     },
     "engines": {
-        "node": ">=22"
+        "node": "^20.19.0 || ^22.13.0 || >=24"
     }
 }
