@@ -43,7 +43,7 @@ if ! block_present; then
 fi
 
 # Shields reads the label and the message out of the path, so a space goes in encoded.
-badge="[![Upstream checked](https://img.shields.io/badge/upstream%20checked-${sha:0:8}-informational)](https://github.com/$UPSTREAM_REPO/commit/$sha)"
+badge="[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-${sha:0:8}-informational)](https://github.com/$UPSTREAM_REPO/commit/$sha)"
 # One line, so the badge sits beside the one ahead of it rather than under it.
 block="$START$badge$END"
 
