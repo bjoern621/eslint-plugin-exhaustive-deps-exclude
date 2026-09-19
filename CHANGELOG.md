@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0]
+
 ### Added
 
 - A README badge naming the upstream commit the last sync run compared against, written back to the branch that ran.
