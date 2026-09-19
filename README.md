@@ -185,11 +185,17 @@ You want to debounce based on `query` changes, not `onSearch` reference changes.
 
 ## Installation
 
+Install it as a dev dependency, under the package manager the project already uses:
+
 ```bash
 npm install --save-dev eslint-plugin-exhaustive-deps-exclude
+# or
+pnpm add -D eslint-plugin-exhaustive-deps-exclude
+# or
+yarn add --dev eslint-plugin-exhaustive-deps-exclude
 ```
 
-It runs on ESLint 9 and Node 22, under flat config.
+It runs on ESLint 9 and 10, Node 20.19 and newer, under flat config.
 
 ### Configuration
 
@@ -223,6 +229,31 @@ export default [
 ```
 
 Both rules report the same missing dependencies, so leaving React's on would report each one twice.
+
+Alongside React's own recommended config, the spread order decides which setting survives:
+
+```javascript
+// eslint.config.js
+import reactHooks from "eslint-plugin-react-hooks";
+import exhaustiveDepsExclude from "eslint-plugin-exhaustive-deps-exclude";
+
+export default [
+    {
+        files: ["src/**/*.{js,jsx,ts,tsx}"],
+        plugins: {
+            "react-hooks": reactHooks,
+            "exhaustive-deps-exclude": exhaustiveDepsExclude,
+        },
+        rules: {
+            ...reactHooks.configs.recommended.rules,
+            ...exhaustiveDepsExclude.configs.recommended.rules,
+        },
+    },
+];
+```
+
+React's recommended rules switch `react-hooks/exhaustive-deps` on, and this plugin's rules switch it back off.
+Spreading the two the other way around would leave React's rule on, and every missing dependency would be reported twice.
 
 ### Usage
 
