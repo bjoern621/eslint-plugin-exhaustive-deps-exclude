@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The peer range accepts ESLint 10 beside ESLint 9.
+- The engine range reaches down to Node 20.19 and stays open above Node 24.
+- The case suite runs under both ESLint majors, across every supported Node line.
+
 ## [2.1.0]
 
 ### Added
