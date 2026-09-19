@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- A README badge naming the upstream commit the last sync run compared against, committed to the default branch by the schedule.
+- A README badge naming the upstream commit the last sync run compared against and the day it ran, committed to the default branch by the schedule.
 - The README names every hook the rule reads, and the case suite carries a case for each.
 
 ### Changed

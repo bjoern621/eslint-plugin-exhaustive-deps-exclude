@@ -1,6 +1,6 @@
 # exhaustive-deps-exclude
 
-[![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude) <!-- checked:start -->[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-019019be-informational "Newest React commit the copied rule has been compared against")](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b)<!-- checked:end -->
+[![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude) <!-- checked:start -->[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-019019be%20(2026--09--19)-informational "React commit the copied rule was compared against, and the day of that check")](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b)<!-- checked:end -->
 
 <!-- upstream:start -->
 > **Based on** React's own `exhaustive-deps` rule, copied from [`eslint-plugin-react-hooks@7.1.1-canary-019019be-20260911`](https://www.npmjs.com/package/eslint-plugin-react-hooks/v/7.1.1-canary-019019be-20260911)
