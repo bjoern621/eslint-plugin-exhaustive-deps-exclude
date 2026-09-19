@@ -30,7 +30,9 @@ The GitHub release stands from that moment, and the npm version follows the appr
 ## What decides the number
 
 The number is this package's own, and it tracks no upstream version.
-A change to `engines.node`, to `configs.recommended`, or to what the rule reports is a major.
+A change to `configs.recommended`, or to what the rule reports, is a major.
+So is a narrowing of `engines.node` or of the peer range, which drops a runtime somebody was on.
+Widening either one is a minor, since every existing install keeps working.
 The vendored React revision moves on its own schedule, and the README banner names it.
 
 ## Credentials
