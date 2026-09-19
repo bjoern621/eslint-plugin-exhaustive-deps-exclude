@@ -1,5 +1,5 @@
 import { describe, it } from "node:test";
-import { RuleTester } from "eslint";
+import { RuleTester } from "./eslint-compat.js";
 
 import plugin from "../lib/index.js";
 

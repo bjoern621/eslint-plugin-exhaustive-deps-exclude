@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { ESLint } from "eslint";
+import { ESLint } from "./eslint-compat.js";
 
 import plugin from "../lib/index.js";
 
