@@ -7,22 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0]
+## [2.2.0] - 2026-09-19
 
 ### Added
 
 - A README badge naming the upstream commit the last sync run compared against and the day it ran.
   It reads `vendor/upstream-checked.json`, which the schedule commits, so a published page shows the last check rather than the state at publishing time.
-- The README names every hook the rule reads, and the case suite carries a case for each.
 
 ### Changed
 
-- The package description names what the rule does rather than `useEffect` alone.
 - The peer range accepts ESLint 8.57 and ESLint 10 beside ESLint 9.
 - The engine range reaches down to Node 20.19 and stays open above Node 24.
-- The case suite runs under every supported ESLint major, across every supported Node line.
+  Both ranges are covered by the case suite, every ESLint major against every Node line.
+- The README names every hook the rule reads, and the package description says what the rule does, where both spoke of `useEffect` alone.
 
-## [2.1.0]
+## [2.1.0] - 2026-09-12
 
 ### Added
 
@@ -38,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The README configures the plugin under flat config.
   It carried an eslintrc block, which leaves the rule undefined because eslintrc cannot load an ESM-only plugin.
 
-## [2.0.0]
+## [2.0.0] - 2026-09-12
 
 ### Added
 
@@ -58,9 +57,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The search covered 100 characters before the array.
 - An exclusion written inside a nested function stays with that function and no longer reaches the enclosing hook.
 
-## [1.0.0]
+## [1.0.0] - 2025-10-22
 
 ### Added
 
 - The `exhaustive-deps` rule, React's rule reading `// exhaustive-deps-exclude [a, b]` comments as exemptions.
 - `configs.recommended`, switching the upstream rule off and this one on.
+
+[unreleased]: https://github.com/bjoern621/eslint-plugin-exhaustive-deps-exclude/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/bjoern621/eslint-plugin-exhaustive-deps-exclude/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/bjoern621/eslint-plugin-exhaustive-deps-exclude/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/bjoern621/eslint-plugin-exhaustive-deps-exclude/releases/tag/v2.0.0
+[1.0.0]: https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude/v/1.0.0
