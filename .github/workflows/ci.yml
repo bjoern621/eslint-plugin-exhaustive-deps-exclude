@@ -49,3 +49,5 @@ jobs:
       - run: task markers
 
       - run: task banner:check
+
+      - run: task checked:check
