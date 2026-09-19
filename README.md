@@ -1,10 +1,10 @@
 # exhaustive-deps-exclude
 
-[![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude) <!-- checked:start -->[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-019019be-informational)](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b)<!-- checked:end -->
+[![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude) <!-- checked:start -->[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-019019be-informational "Newest React commit the vendored rule has been compared against")](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b)<!-- checked:end -->
 
 <!-- upstream:start -->
-> **Based on** [`eslint-plugin-react-hooks@7.1.1-canary-019019be-20260911`](https://www.npmjs.com/package/eslint-plugin-react-hooks/v/7.1.1-canary-019019be-20260911)
-> from React commit [`019019be403c3269e15b8d7ebefb57d30f84086b`](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b).
+> **Based on** React's own `exhaustive-deps` rule, vendored from [`eslint-plugin-react-hooks@7.1.1-canary-019019be-20260911`](https://www.npmjs.com/package/eslint-plugin-react-hooks/v/7.1.1-canary-019019be-20260911)
+> at React commit [`019019be403c3269e15b8d7ebefb57d30f84086b`](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b).
 <!-- upstream:end -->
 
 ## The Problem
