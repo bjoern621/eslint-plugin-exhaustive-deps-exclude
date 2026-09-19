@@ -1,35 +1,43 @@
 #!/usr/bin/env bash
-# Rewrites the README badge naming the upstream commit the last check compared against.
+# Writes the file the README badge reads, naming the upstream commit a check compared against.
 # Usage: upstream-checked-badge.sh <commit sha> [<YYYY-MM-DD>] | --check
 # The date defaults to today in UTC, and names the day the check ran.
-# --check reports whether the block the sync workflow writes into is still there, and writes nothing.
-# Exit 0 rewritten or present, 1 the block is missing under --check,
-# 3 the block is missing while writing or the argument is no commit sha.
+# --check reports whether the file and the README badge still agree on where the data sits.
+# Exit 0 written or agreed, 1 disagreed under --check, 3 the argument is no commit sha or no date.
 set -uo pipefail
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$repo_root" || exit 3
 
 UPSTREAM_REPO=${UPSTREAM_REPO:-facebook/react}
-START='<!-- checked:start -->'
-END='<!-- checked:end -->'
-
-block_present() {
-    grep -qF "$START" README.md && grep -qF "$END" README.md
-}
+DATA_FILE=vendor/upstream-checked.json
 
 if [ "${1:-}" = "--check" ]; then
-    if block_present; then
-        exit 0
+    status=0
+    # The badge URL carries the path encoded, so the file name is what both spellings share.
+    if ! grep -qF "$(basename "$DATA_FILE")" README.md; then
+        echo "README carries no badge reading $DATA_FILE" >&2
+        status=1
     fi
-    echo "README carries no checked badge, which the sync workflow writes into" >&2
-    exit 1
+    # The node program is quoted against the shell, taking the file as an argument instead.
+    # shellcheck disable=SC2016
+    if ! node -e '
+        const data = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
+        for (const key of ["sha", "checked", "message"]) {
+            if (typeof data[key] !== "string" || data[key] === "") {
+                throw new Error(`${process.argv[1]} carries no ${key}`);
+            }
+        }
+    ' "$DATA_FILE"; then
+        status=1
+    fi
+    exit "$status"
 fi
 
 sha=${1:-}
 case "$sha" in
     "" | *[!0-9a-f]*)
-        echo "usage: upstream-checked-badge.sh <commit sha>" >&2
+        echo "usage: upstream-checked-badge.sh <commit sha> [<YYYY-MM-DD>]" >&2
         exit 3
         ;;
 esac
@@ -47,25 +55,14 @@ case "$checked_on" in
         ;;
 esac
 
-if ! block_present; then
-    echo "README carries no checked badge" >&2
-    exit 3
-fi
+# Shields reads one field per badge, so the rendered text is assembled here rather than there.
+cat > "$DATA_FILE" <<JSON
+{
+    "sha": "$sha",
+    "checked": "$checked_on",
+    "message": "${sha:0:8} ($checked_on)",
+    "commit": "https://github.com/$UPSTREAM_REPO/commit/$sha"
+}
+JSON
 
-# Shields reads the label and the message out of the path, so a space goes in encoded
-# and a dash inside the message goes in doubled.
-message="${sha:0:8}%20(${checked_on//-/--})"
-badge="[![React upstream checked](https://img.shields.io/badge/React%20upstream%20checked-$message-informational \"React commit the copied rule was compared against, and the day of that check\")](https://github.com/$UPSTREAM_REPO/commit/$sha)"
-# One line, so the badge sits beside the one ahead of it rather than under it.
-block="$START$badge$END"
-
-BLOCK="$block" START="$START" END="$END" node -e '
-    const fs = require("fs");
-    const { BLOCK, START, END } = process.env;
-    const readme = fs.readFileSync("README.md", "utf8");
-    const from = readme.indexOf(START);
-    const to = readme.indexOf(END) + END.length;
-    fs.writeFileSync("README.md", readme.slice(0, from) + BLOCK.trimEnd() + readme.slice(to));
-' || exit 3
-
-echo "README checked badge set to $sha, checked on $checked_on"
+echo "$DATA_FILE set to $sha, checked on $checked_on"
