@@ -1,6 +1,6 @@
 {
     "name": "eslint-plugin-exhaustive-deps-exclude",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "description": "ESLint plugin that excludes single dependencies from React's exhaustive-deps rule via inline comments",
     "keywords": [
         "eslint",
