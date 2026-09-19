@@ -44,7 +44,8 @@ fi
 
 # Shields reads the label and the message out of the path, so a space goes in encoded.
 badge="[![Upstream checked](https://img.shields.io/badge/upstream%20checked-${sha:0:8}-informational)](https://github.com/$UPSTREAM_REPO/commit/$sha)"
-block=$(printf '%s\n%s\n%s\n' "$START" "$badge" "$END")
+# One line, so the badge sits beside the one ahead of it rather than under it.
+block="$START$badge$END"
 
 BLOCK="$block" START="$START" END="$END" node -e '
     const fs = require("fs");
