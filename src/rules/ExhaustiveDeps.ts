@@ -55,7 +55,11 @@ const rule = {
       description:
         'verifies the list of dependencies for Hooks like useEffect and similar',
       recommended: true,
+<<<<<<< local
       url: 'https://github.com/bjoern621/eslint-plugin-exhaustive-deps-exclude#readme',
+=======
+      url: 'https://github.com/react/react/issues/14920',
+>>>>>>> upstream 76baa3b5434fad315ece9cfd4d20d7a8d6c34a25
     },
     fixable: 'code',
     hasSuggestions: true,

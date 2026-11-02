@@ -1,0 +1,7 @@
+[32mtask: [build] npx tsc
+[0msrc/rules/ExhaustiveDeps.ts(58,1): error TS1185: Merge conflict marker encountered.
+src/rules/ExhaustiveDeps.ts(60,1): error TS1185: Merge conflict marker encountered.
+src/rules/ExhaustiveDeps.ts(62,1): error TS1185: Merge conflict marker encountered.
+::error title=Task 'test' failed::task: Failed to run task "build": exit status 2
+[31mtask: Failed to run task "test": task: Failed to run task "build": exit status 2
+[0m

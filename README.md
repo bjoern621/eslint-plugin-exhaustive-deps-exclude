@@ -3,8 +3,7 @@
 [![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude) [![React upstream checked](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbjoern621%2Feslint-plugin-exhaustive-deps-exclude%2Fmain%2Fvendor%2Fupstream-checked.json&query=%24.message&label=React%20upstream%20checked&color=informational "React commit the copied rule was compared against, and the day of that check")](https://github.com/facebook/react/commits/main/packages/eslint-plugin-react-hooks/src)
 
 <!-- upstream:start -->
-> **Based on** React's own `exhaustive-deps` rule, copied from [`eslint-plugin-react-hooks@7.1.1-canary-019019be-20260911`](https://www.npmjs.com/package/eslint-plugin-react-hooks/v/7.1.1-canary-019019be-20260911)
-> at React commit [`019019be403c3269e15b8d7ebefb57d30f84086b`](https://github.com/facebook/react/commit/019019be403c3269e15b8d7ebefb57d30f84086b).
+> **Based on** React's own `exhaustive-deps` rule, copied from `eslint-plugin-react-hooks` at React commit [`76baa3b5434fad315ece9cfd4d20d7a8d6c34a25`](https://github.com/facebook/react/commit/76baa3b5434fad315ece9cfd4d20d7a8d6c34a25).
 <!-- upstream:end -->
 
 ## The Problem
