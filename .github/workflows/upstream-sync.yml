@@ -47,10 +47,10 @@ jobs:
         run: |
           # Redirected rather than piped, so the recorded status is the script's and not tee's.
           set +e
-          ./scripts/sync-upstream.sh --ref "${{ steps.checked.outputs.sha }}" > sync.log 2>&1
+          ./scripts/sync-upstream.sh --ref "${{ steps.checked.outputs.sha }}" > "$RUNNER_TEMP/sync.log" 2>&1
           status=$?
           set -e
-          cat sync.log
+          cat "$RUNNER_TEMP/sync.log"
           echo "status=$status" >> "$GITHUB_OUTPUT"
           if git diff --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -62,7 +62,10 @@ jobs:
         id: verify
         if: steps.sync.outputs.changed == 'true'
         continue-on-error: true
-        run: task test 2>&1 | tee test.log
+        # The default shell runs without pipefail and would report tee's status.
+        run: |
+          set -o pipefail
+          task test 2>&1 | tee "$RUNNER_TEMP/test.log"
 
       - name: Open or update the sync pull request
         if: steps.sync.outputs.changed == 'true'
@@ -94,19 +97,19 @@ jobs:
             echo "## Sync log"
             echo
             echo '```'
-            cat sync.log
+            cat "$RUNNER_TEMP/sync.log"
             echo '```'
             if [ "$TEST_RESULT" != "success" ]; then
               echo
               echo "## Test output"
               echo
               echo '```'
-              tail -60 test.log
+              tail -60 "$RUNNER_TEMP/test.log"
               echo '```'
             fi
             echo
             echo "docs/upstream-sync.md describes what this pipeline does and how to take it over by hand."
-          } > body.md
+          } > "$RUNNER_TEMP/body.md"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -118,12 +121,12 @@ jobs:
           # A run while the previous PR is still open updates that one rather than stacking another.
           existing=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            gh pr edit "$existing" --body-file body.md
+            gh pr edit "$existing" --body-file "$RUNNER_TEMP/body.md"
           else
             gh pr create \
               --head "$SYNC_BRANCH" \
               --title "chore: sync vendored react-hooks sources to ${pinned:0:12}" \
-              --body-file body.md
+              --body-file "$RUNNER_TEMP/body.md"
           fi
 
       - name: Record the upstream commit this run checked
