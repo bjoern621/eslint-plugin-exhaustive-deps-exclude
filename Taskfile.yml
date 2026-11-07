@@ -34,12 +34,12 @@ tasks:
       - ./scripts/sync-upstream.sh {{.CLI_ARGS}}
 
   checked:
-    desc: "Set the README badge to the upstream commit a check compared against (args: -- <sha> [<YYYY-MM-DD>])"
+    desc: "Publish the upstream commit a check compared against to the README badge (args: -- <sha> [<YYYY-MM-DD>])"
     cmds:
       - ./scripts/upstream-checked-badge.sh {{.CLI_ARGS}}
 
   checked:check:
-    desc: Report whether the README still carries the badge block the sync workflow writes into
+    desc: Report whether the README badge reads the branch the sync workflow publishes to
     cmds:
       - ./scripts/upstream-checked-badge.sh --check
 

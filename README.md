@@ -1,6 +1,6 @@
 # exhaustive-deps-exclude
 
-[![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude) [![React upstream checked](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbjoern621%2Feslint-plugin-exhaustive-deps-exclude%2Fmain%2Fvendor%2Fupstream-checked.json&query=%24.message&label=React%20upstream%20checked&color=informational "React commit the copied rule was compared against, and the day of that check")](https://github.com/facebook/react/commits/main/packages/eslint-plugin-react-hooks/src)
+[![npm](https://img.shields.io/npm/v/eslint-plugin-exhaustive-deps-exclude)](https://www.npmjs.com/package/eslint-plugin-exhaustive-deps-exclude) [![React upstream checked](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbjoern621%2Feslint-plugin-exhaustive-deps-exclude%2Fbadge-data%2Fupstream-checked.json&query=%24.message&label=React%20upstream%20checked&color=informational "React commit the copied rule was compared against, and the day of that check")](https://github.com/facebook/react/commits/main/packages/eslint-plugin-react-hooks/src)
 
 <!-- upstream:start -->
 > **Based on** React's own `exhaustive-deps` rule, copied from [`eslint-plugin-react-hooks@7.1.1-canary-019019be-20260911`](https://www.npmjs.com/package/eslint-plugin-react-hooks/v/7.1.1-canary-019019be-20260911)
