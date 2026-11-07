@@ -24,13 +24,14 @@ The verification pipeline answers whether the result still behaves.
 It builds, runs the rule against the case suite in `tests/`, and greps for leftover conflict markers.
 The marker grep is load-bearing: the rule file carries `@ts-nocheck`, so the compiler accepts a file a merge has mangled, and the suite plus the grep are the only gates.
 
-Every run records the commit it compared against in `vendor/upstream-checked.json`, along with the day it ran, whether or not upstream had moved.
-The README badge reads that file through Shields at render time. The npm page and the repository front page both show the last check rather than the state at publishing time.
-The schedule runs on the default branch, which is the copy the badge URL names.
+Every run records the commit it compared against, along with the day it ran, whether or not upstream had moved.
+The record lands in `upstream-checked.json` on the `badge-data` branch, since the ruleset on `main` refuses a push from the workflow.
+The README badge reads that file through Shields at render time.
+The npm page and the repository front page both show the last check rather than the state at publishing time.
 The badge answers how fresh the last look was.
 The banner under it names the commit the vendored copies carry.
-`task checked -- <sha>` writes the file by hand, and takes a `YYYY-MM-DD` after the commit to override the day.
-`task checked:check` reports a README and a file that have drifted apart.
+`task checked -- <sha>` publishes a record by hand, and takes a `YYYY-MM-DD` after the commit to override the day.
+`task checked:check` reports a README badge that reads from anywhere else.
 
 A scheduled run joins the two and opens a pull request carrying the merge outcome, the test outcome and the delta.
 A run finding no change opens nothing.
